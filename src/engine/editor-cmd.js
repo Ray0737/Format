@@ -145,7 +145,7 @@ window.Format = window.Format || {};
         const offset = (existing.length % 6) * 16;
         const width = 240;
         const height = Math.round(width * (probe.naturalHeight / probe.naturalWidth)) || width;
-        const html = `<div class="doc-element" data-element="image" contenteditable="false" style="left:${48 + offset}px; top:${48 + offset}px; width:${width}px; height:${height}px; z-index:${maxZ + 1}"><span class="doc-element__handle" title="Drag to move">${Format.icons.move}</span><img src="${dataUrl}" alt="" draggable="false"><span class="doc-element__resize" title="Resize"></span></div>`;
+        const html = `<div class="doc-element" data-element="image" contenteditable="false" style="left:${48 + offset}px; top:${48 + offset}px; width:${width}px; height:${height}px; z-index:${maxZ + 1}"><img src="${dataUrl}" alt="" draggable="false"></div>`;
         const wrapper = document.createElement("div");
         wrapper.innerHTML = html;
         page.appendChild(wrapper.firstElementChild);
@@ -186,7 +186,7 @@ window.Format = window.Format || {};
         : 'fill="var(--color-navy-100)" stroke="var(--color-navy-800)"';
     const svg = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" ${fillStroke} stroke-width="3" vector-effect="non-scaling-stroke">${preset.markup}</svg>`;
 
-    const html = `<div class="doc-element doc-element--shape" data-element="shape" contenteditable="false" style="left:${48 + offset}px; top:${48 + offset}px; width:${preset.width}px; height:${preset.height}px; z-index:${maxZ + 1}"><span class="doc-element__handle" title="Drag to move">${Format.icons.move}</span>${svg}<span class="doc-element__resize" title="Resize"></span></div>`;
+    const html = `<div class="doc-element doc-element--shape" data-element="shape" contenteditable="false" style="left:${48 + offset}px; top:${48 + offset}px; width:${preset.width}px; height:${preset.height}px; z-index:${maxZ + 1}">${svg}</div>`;
 
     const wrapper = document.createElement("div");
     wrapper.innerHTML = html;

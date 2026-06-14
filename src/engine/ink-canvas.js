@@ -27,7 +27,20 @@ window.Format = window.Format || {};
     eraser: { erase: true, flat: true, width: 22 },
   };
 
-  const COLORS = ["#051224", "#de7914", "#c0392b", "#1a7a4a", "#2563eb", "#7a3ea8"];
+  // Default colour presets: black, red, blue, then pastels.
+  const COLORS = [
+    "#1a1a1a", // black
+    "#e23b3b", // red
+    "#2f6fed", // blue
+    "#f6a5c0", // pastel pink
+    "#f7df8b", // pastel yellow
+    "#a8e0b8", // pastel green
+    "#a9cdf5", // pastel blue
+    "#c7b3ec", // pastel purple
+  ];
+  // Line-weight multipliers (applied per stroke, stored on the stroke so past
+  // strokes keep their weight when re-rendered).
+  const WEIGHTS = [0.5, 1, 2, 3.5];
   const DPR = Math.min(window.devicePixelRatio || 1, 2);
   // Hard cap on a single canvas's pixel width so deep zoom can't blow up memory.
   const MAX_BACKING_WIDTH = 4096;
@@ -35,6 +48,7 @@ window.Format = window.Format || {};
   let enabled = false;
   let tool = "pen";
   let color = COLORS[0];
+  let weight = 1; // current line-weight multiplier
   let zoomScale = 1; // current editor zoom; raises ink backing resolution
 
   // In-progress stroke state.
@@ -55,9 +69,10 @@ window.Format = window.Format || {};
 
   function widthFor(stroke, pressure) {
     const t = TOOLS[stroke.tool] || TOOLS.pen;
-    if (t.flat) return t.width;
+    const m = stroke.weight || 1;
+    if (t.flat) return t.width * m;
     const p = pressure > 0 ? pressure : 0.5;
-    return t.minWidth + (t.maxWidth - t.minWidth) * p;
+    return (t.minWidth + (t.maxWidth - t.minWidth) * p) * m;
   }
 
   function renderStroke(ctx, stroke) {
@@ -173,7 +188,7 @@ window.Format = window.Format || {};
     drawing = true;
     activePointerId = event.pointerId;
     currentCanvas = canvas;
-    currentStroke = { tool, color, points: [pointFor(canvas, event)] };
+    currentStroke = { tool, color, weight, points: [pointFor(canvas, event)] };
     strokesOf(canvas).push(currentStroke);
     try {
       canvas.setPointerCapture(event.pointerId);
@@ -302,6 +317,11 @@ window.Format = window.Format || {};
         `<button type="button" class="ink-swatch ${c === color ? "is-active" : ""}" data-ink-color="${c}" style="background:${c}" title="${c}"></button>`
     ).join("");
 
+    const weights = WEIGHTS.map((w) => {
+      const dot = Math.round(4 + w * 3); // visual dot size for the weight
+      return `<button type="button" class="ink-weight ${w === weight ? "is-active" : ""}" data-ink-weight="${w}" title="Line weight"><span class="ink-weight__dot" style="width:${dot}px;height:${dot}px"></span></button>`;
+    }).join("");
+
     bar.innerHTML = `
       <div class="ink-group">
         ${toolBtn("pen", "Pen", "pen")}
@@ -309,7 +329,15 @@ window.Format = window.Format || {};
         ${toolBtn("eraser", "Eraser", "eraser")}
       </div>
       <div class="ink-divider"></div>
-      <div class="ink-group ink-colors">${swatches}</div>
+      <div class="ink-group ink-weights">${weights}</div>
+      <div class="ink-divider"></div>
+      <div class="ink-group ink-colors">
+        ${swatches}
+        <label class="ink-custom" title="Custom colour">
+          ${Format.icons.plus}
+          <input type="color" data-ink-custom value="${color}">
+        </label>
+      </div>
       <div class="ink-divider"></div>
       <button type="button" class="ink-tool" data-ink-cmd="clear" title="Clear this page">${Format.icons.trash}</button>
       <button type="button" class="ink-done" data-ink-cmd="done">Done</button>
@@ -323,20 +351,36 @@ window.Format = window.Format || {};
         bar.querySelectorAll("[data-ink-tool]").forEach((b) => b.classList.toggle("is-active", b === toolEl));
         return;
       }
+      const weightEl = event.target.closest("[data-ink-weight]");
+      if (weightEl) {
+        weight = Number(weightEl.dataset.inkWeight);
+        bar.querySelectorAll("[data-ink-weight]").forEach((b) => b.classList.toggle("is-active", b === weightEl));
+        return;
+      }
       const colorEl = event.target.closest("[data-ink-color]");
       if (colorEl) {
-        color = colorEl.dataset.inkColor;
-        bar.querySelectorAll("[data-ink-color]").forEach((b) => b.classList.toggle("is-active", b === colorEl));
-        if (tool === "eraser") {
-          tool = "pen";
-          bar.querySelectorAll("[data-ink-tool]").forEach((b) => b.classList.toggle("is-active", b.dataset.inkTool === "pen"));
-        }
+        setColor(colorEl.dataset.inkColor, colorEl);
         return;
       }
       const cmd = event.target.closest("[data-ink-cmd]")?.dataset.inkCmd;
       if (cmd === "clear") clearCurrentPage();
       if (cmd === "done") setEnabled(false);
     });
+
+    // Custom colour picker.
+    bar.addEventListener("input", (event) => {
+      if (event.target.matches("[data-ink-custom]")) setColor(event.target.value, null);
+    });
+
+    function setColor(value, swatchEl) {
+      color = value;
+      bar.querySelectorAll("[data-ink-color]").forEach((b) => b.classList.toggle("is-active", b === swatchEl));
+      // Picking a colour while erasing switches back to the pen.
+      if (tool === "eraser") {
+        tool = "pen";
+        bar.querySelectorAll("[data-ink-tool]").forEach((b) => b.classList.toggle("is-active", b.dataset.inkTool === "pen"));
+      }
+    }
   }
 
   function init() {

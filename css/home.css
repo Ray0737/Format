@@ -164,43 +164,28 @@
 .review-queue-card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 18px;
+  gap: 4px;
+  padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-white);
-  border-left: 4px solid var(--color-amber);
+  transition: box-shadow 0.15s ease;
 }
 
-.review-queue-card__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.review-queue-card:hover {
+  box-shadow: 0 4px 16px rgb(5 18 36 / 0.08);
 }
 
 .review-queue-card__icon {
   display: flex;
-  width: 24px;
-  height: 24px;
-  color: var(--color-navy-800);
-}
-
-.review-queue-card__count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 26px;
-  height: 26px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: var(--color-amber);
-  color: #fff;
-  font-size: 0.8125rem;
-  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  color: var(--color-muted);
 }
 
 .review-queue-card__title {
-  font-size: 1rem;
+  margin-top: 2px;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-navy-800);
   white-space: nowrap;
@@ -213,34 +198,42 @@
   color: var(--color-muted);
 }
 
+.review-queue-card__meta .is-due {
+  color: var(--color-amber);
+  font-weight: 700;
+}
+
 .review-queue-card__btn {
-  margin-top: 8px;
-  padding: 9px;
-  border: none;
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  background: var(--color-amber);
-  color: #fff;
-  font-size: 0.875rem;
+  background: var(--color-white);
+  color: var(--color-navy-800);
+  font-size: 0.8125rem;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .review-queue-card__btn:hover {
-  background: var(--color-amber-hover);
+  background: var(--color-amber);
+  border-color: var(--color-amber);
+  color: #fff;
 }
 
 /* ── Flashcards view (standalone decks) ────────────────────────────── */
-.fc-toolbar {
+.fc-page-head {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-.fc-count {
+.fc-page-head__sub {
+  margin-top: 6px;
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -285,19 +278,19 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 18px;
+  gap: 4px;
+  padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-white);
-  border-left: 4px solid var(--color-amber);
   transition: box-shadow 0.15s ease;
 }
 
 .fc-deck-card:hover {
-  box-shadow: 0 6px 20px rgb(5 18 36 / 0.1);
+  box-shadow: 0 4px 16px rgb(5 18 36 / 0.08);
 }
 
+/* Full-card click target to open the deck (sits below the action buttons) */
 .fc-deck-card__open {
   position: absolute;
   inset: 0;
@@ -307,11 +300,13 @@
   cursor: pointer;
 }
 
+/* Always-visible delete (touch-friendly), kept above the open overlay so it's
+   never blocked. The top-right corner is free (due moved into the meta line). */
 .fc-deck-card__del {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -321,16 +316,13 @@
   background: none;
   border-radius: 6px;
   color: var(--color-muted);
-  opacity: 0;
+  opacity: 0.55;
   cursor: pointer;
   transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
-.fc-deck-card:hover .fc-deck-card__del {
-  opacity: 1;
-}
-
 .fc-deck-card__del:hover {
+  opacity: 1;
   background: var(--color-navy-50);
   color: var(--color-danger);
 }
@@ -340,65 +332,52 @@
   height: 16px;
 }
 
-.fc-deck-card__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .fc-deck-card__icon {
   display: flex;
-  width: 26px;
-  height: 26px;
-  color: var(--color-navy-800);
-}
-
-.fc-deck-card__due {
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 9px;
-  border-radius: 999px;
-  background: var(--color-amber);
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  color: var(--color-muted);
+  pointer-events: none;
 }
 
 .fc-deck-card__name {
-  position: relative;
-  z-index: 1;
+  margin-top: 2px;
   pointer-events: none;
-  font-size: 1.0625rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-navy-800);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* leave room so a long title doesn't run under the delete button */
+  padding-right: 24px;
 }
 
 .fc-deck-card__meta {
-  position: relative;
-  z-index: 1;
   pointer-events: none;
   font-size: 0.8125rem;
   color: var(--color-muted);
+}
+
+.fc-deck-card__due {
+  color: var(--color-amber);
+  font-weight: 700;
 }
 
 .fc-deck-card__review {
   position: relative;
   z-index: 1;
   margin-top: 10px;
-  padding: 9px;
+  padding: 8px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
   background: var(--color-white);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   font-family: inherit;
   color: var(--color-navy-800);
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .fc-deck-card__review:hover {
@@ -411,9 +390,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 150px;
+  min-height: 132px;
   border: 1px dashed var(--color-border);
-  border-left: 1px dashed var(--color-border);
   color: var(--color-muted);
   font-size: 0.875rem;
   font-weight: 500;
@@ -427,8 +405,8 @@
 
 .fc-deck-card__plus {
   display: flex;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
 }
 
 /* Deck editor */

@@ -178,6 +178,243 @@
   color: var(--color-navy-800);
 }
 
+/* ── Picker-style modal (New document, Export) ─────────────────────── */
+.modal__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-navy-800);
+}
+
+.modal--picker {
+  max-width: 540px;
+}
+
+.picker-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.picker-label {
+  margin-bottom: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-navy-800);
+}
+
+.picker-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-white);
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: var(--color-navy-800);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.picker-input:focus,
+.picker-input:focus-visible {
+  outline: none;
+  border-color: var(--color-muted);
+  box-shadow: none;
+}
+
+.picker-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.picker-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-white);
+  text-align: center;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.picker-card:hover {
+  border-color: var(--color-amber);
+}
+
+.picker-card.is-selected {
+  border-color: var(--color-amber);
+  background: var(--color-amber-light);
+  box-shadow: 0 0 0 1px var(--color-amber);
+}
+
+.picker-card__check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--color-amber);
+}
+
+.picker-card.is-selected .picker-card__check {
+  display: flex;
+}
+
+.picker-card__check svg {
+  width: 16px;
+  height: 16px;
+}
+
+.picker-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--color-navy-50);
+  color: var(--color-navy-800);
+}
+
+.picker-card.is-selected .picker-card__icon {
+  background: var(--color-white);
+  color: var(--color-amber);
+}
+
+.picker-card__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.picker-card__title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-navy-800);
+}
+
+.picker-card__desc {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+.picker-note {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.picker-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-amber);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.picker-cta:hover {
+  background: var(--color-amber-hover);
+}
+
+/* Confirm dialog — centered, icon-led (delete confirmation) */
+.confirm-dialog {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 24px 20px;
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgb(5 18 36 / 0.25);
+}
+
+.confirm-dialog__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: rgb(239 68 68 / 0.12);
+  color: #ef4444;
+}
+
+.confirm-dialog__icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.confirm-dialog__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-navy-800);
+}
+
+.confirm-dialog__message {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.confirm-btn--cancel {
+  background: var(--color-navy-50);
+  color: var(--color-navy-800);
+}
+
+.confirm-btn--cancel:hover {
+  background: #e6ebf0;
+}
+
+.confirm-btn--danger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.confirm-btn--danger:hover {
+  background: #dc2f2f;
+}
+
 /* Export chooser options (Phase 10) */
 .export-option {
   display: flex;

@@ -63,13 +63,10 @@ window.Format = window.Format || {};
       .map(
         ({ deck, stats }) => `
       <div class="review-queue-card">
-        <div class="review-queue-card__top">
-          <span class="review-queue-card__icon">${Format.icons.flashcard}</span>
-          <span class="review-queue-card__count">${stats.due}</span>
-        </div>
+        <span class="review-queue-card__icon">${Format.icons.flashcard}</span>
         <h3 class="review-queue-card__title">${Format.escapeHtml(deck.name || "Untitled deck")}</h3>
-        <p class="review-queue-card__meta">${stats.due} due · ${stats.total} card${stats.total === 1 ? "" : "s"}</p>
-        <button type="button" class="review-queue-card__btn" data-action="review-deck" data-deck-id="${deck.id}">Review now</button>
+        <p class="review-queue-card__meta"><span class="is-due">${stats.due} due</span> · ${stats.total} card${stats.total === 1 ? "" : "s"}</p>
+        <button type="button" class="review-queue-card__btn" data-action="review-deck" data-deck-id="${deck.id}">Review</button>
       </div>`
       )
       .join("");

@@ -4,9 +4,12 @@ window.Format = window.Format || {};
 
 (function () {
   const TYPES = [
-    { type: "blank", label: "Blank A4", icon: "blank" },
-    { type: "pdf", label: "PDF Import", icon: "pdf" },
+    { type: "blank", label: "Blank A4", icon: "blank", desc: "Empty page, start writing" },
+    { type: "pdf", label: "PDF Import", icon: "pdf", desc: "Annotate a PDF" },
   ];
+
+  const CHECK_SVG =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
   let selectedType = "blank";
 
@@ -15,15 +18,17 @@ window.Format = window.Format || {};
     if (!grid) return;
 
     grid.innerHTML = "";
-    TYPES.forEach(({ type, label, icon }) => {
+    TYPES.forEach(({ type, label, icon, desc }) => {
       const card = document.createElement("button");
       card.type = "button";
-      card.className = "modal__type-card";
+      card.className = "picker-card";
       card.dataset.type = type;
       card.classList.toggle("is-selected", type === selectedType);
       card.innerHTML = `
-        <span class="modal__type-icon">${Format.icons[icon]}</span>
-        <span class="modal__type-label">${label}</span>
+        <span class="picker-card__check">${CHECK_SVG}</span>
+        <span class="picker-card__icon">${Format.icons[icon]}</span>
+        <span class="picker-card__title">${label}</span>
+        <span class="picker-card__desc">${desc}</span>
       `;
       grid.appendChild(card);
     });
@@ -31,7 +36,7 @@ window.Format = window.Format || {};
 
   function selectType(type) {
     selectedType = type;
-    document.querySelectorAll("#new-doc-types .modal__type-card").forEach((card) => {
+    document.querySelectorAll("#new-doc-types .picker-card").forEach((card) => {
       card.classList.toggle("is-selected", card.dataset.type === type);
     });
   }
@@ -81,7 +86,7 @@ window.Format = window.Format || {};
         return;
       }
 
-      const typeCard = event.target.closest("#new-doc-types .modal__type-card");
+      const typeCard = event.target.closest("#new-doc-types .picker-card");
       if (typeCard) {
         selectType(typeCard.dataset.type);
         return;

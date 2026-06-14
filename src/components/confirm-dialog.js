@@ -10,13 +10,16 @@ window.Format = window.Format || {};
     const heading = document.getElementById("confirm-heading");
     const messageEl = document.getElementById("confirm-message");
     const okBtn = overlay?.querySelector('[data-action="confirm-ok"]');
+    const cancelBtn = overlay?.querySelector('[data-action="confirm-cancel"]');
 
-    if (heading) heading.textContent = options.title ?? "Confirm";
+    if (heading) heading.textContent = options.title ?? "Delete";
     if (messageEl) messageEl.textContent = message ?? "";
-    if (okBtn) okBtn.textContent = options.okLabel ?? "Delete";
+    if (okBtn) okBtn.textContent = options.okLabel ?? "Yes, delete!";
+    if (cancelBtn) cancelBtn.textContent = options.cancelLabel ?? "No, keep it.";
 
     overlay?.classList.remove("hidden");
-    okBtn?.focus();
+    // Focus the safe (cancel) action by default.
+    cancelBtn?.focus();
 
     return new Promise((resolve) => {
       resolver = resolve;
@@ -51,8 +54,9 @@ window.Format = window.Format || {};
 
     document.addEventListener("keydown", (event) => {
       if (!isOpen()) return;
+      // Escape cancels. Enter is intentionally NOT a global confirm (destructive
+      // action) — it just activates whichever button has focus.
       if (event.key === "Escape") settle(false);
-      if (event.key === "Enter") settle(true);
     });
   }
 
