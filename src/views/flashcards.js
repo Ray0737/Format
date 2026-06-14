@@ -33,20 +33,15 @@ window.Format = window.Format || {};
     const cards = decks
       .map((deck) => {
         const stats = deckStats(deck);
-        const dueBadge = stats.due > 0 ? `<span class="fc-deck-card__due">${stats.due} due</span>` : "";
+        const dueText = stats.due > 0 ? `<span class="fc-deck-card__due">${stats.due} due</span> · ` : "";
         return `
-        <div class="fc-deck-card group">
+        <div class="fc-deck-card">
           <button type="button" class="fc-deck-card__open" data-fc="open" data-deck="${deck.id}" aria-label="Open ${esc(deck.name)}"></button>
           <button type="button" class="fc-deck-card__del" data-fc="delete-deck" data-deck="${deck.id}" title="Delete deck" aria-label="Delete deck">${Format.icons.trash}</button>
-          <div class="fc-deck-card__top">
-            <span class="fc-deck-card__icon">${Format.icons.flashcard}</span>
-            ${dueBadge}
-          </div>
+          <span class="fc-deck-card__icon">${Format.icons.flashcard}</span>
           <h3 class="fc-deck-card__name">${esc(deck.name)}</h3>
-          <p class="fc-deck-card__meta">${stats.total} card${stats.total === 1 ? "" : "s"}</p>
-          <button type="button" class="fc-deck-card__review" data-fc="review" data-deck="${deck.id}">
-            ${stats.due > 0 ? "Review now" : "Study"}
-          </button>
+          <p class="fc-deck-card__meta">${dueText}${stats.total} card${stats.total === 1 ? "" : "s"}</p>
+          <button type="button" class="fc-deck-card__review" data-fc="review" data-deck="${deck.id}">${stats.due > 0 ? "Review" : "Study"}</button>
         </div>`;
       })
       .join("");
@@ -57,8 +52,11 @@ window.Format = window.Format || {};
       : "No decks yet";
 
     stage().innerHTML = `
-      <div class="fc-toolbar">
-        <span class="fc-count">${summary}</span>
+      <div class="fc-page-head">
+        <div>
+          <h1 class="text-heading text-navy-800">Flashcards</h1>
+          <p class="fc-page-head__sub">${summary}</p>
+        </div>
         <button type="button" class="fc-new-btn" data-fc="new-deck">
           <span class="fc-new-btn__icon">${Format.icons.plus}</span> New deck
         </button>

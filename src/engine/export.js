@@ -132,6 +132,24 @@ window.Format = window.Format || {};
     document.getElementById("export-modal")?.classList.add("hidden");
   }
 
+  let selectedExport = "print";
+
+  function selectExport(choice) {
+    selectedExport = choice;
+    document.querySelectorAll("#export-types .picker-card").forEach((card) => {
+      card.classList.toggle("is-selected", card.dataset.export === choice);
+    });
+  }
+
+  function runSelected() {
+    closeMenu();
+    const run = { print, pdf: exportPdf, png: exportPng }[selectedExport];
+    run?.().catch((err) => {
+      console.error("Export failed", err);
+      Format.Toast?.show?.("Export failed.", "error");
+    });
+  }
+
   function init() {
     document.addEventListener("click", (event) => {
       if (event.target.closest('[data-action="editor-export"]')) {
@@ -142,14 +160,14 @@ window.Format = window.Format || {};
         closeMenu();
         return;
       }
-      const choice = event.target.closest("[data-export]")?.dataset.export;
-      if (!choice) return;
-      closeMenu();
-      const run = { print, pdf: exportPdf, png: exportPng }[choice];
-      run?.().catch((err) => {
-        console.error("Export failed", err);
-        Format.Toast?.show?.("Export failed.", "error");
-      });
+      const card = event.target.closest("#export-types .picker-card");
+      if (card) {
+        selectExport(card.dataset.export);
+        return;
+      }
+      if (event.target.closest('[data-action="export-run"]')) {
+        runSelected();
+      }
     });
 
     document.getElementById("export-modal")?.addEventListener("click", (event) => {

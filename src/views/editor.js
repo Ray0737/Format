@@ -104,7 +104,10 @@ window.Format = window.Format || {};
     return Array.from(canvas.querySelectorAll(".a4-page"))
       .map((page) => {
         const clone = page.cloneNode(true);
-        clone.querySelectorAll(".ink-canvas").forEach((c) => c.remove());
+        // Strip transient overlays so they're never persisted: ink canvas and
+        // the dynamic selection/resize handles + selection state.
+        clone.querySelectorAll(".ink-canvas, .doc-element__rz").forEach((c) => c.remove());
+        clone.querySelectorAll(".doc-element.is-selected").forEach((el) => el.classList.remove("is-selected"));
         return clone.innerHTML;
       })
       .join(PAGE_BREAK);
@@ -265,6 +268,10 @@ window.Format = window.Format || {};
       }
       if (event.target.closest('[data-action="zoom-out"]')) {
         setZoom(zoomLevel - 0.1);
+        return;
+      }
+      if (event.target.closest('[data-action="zoom-reset"]')) {
+        setZoom(1);
       }
     });
 

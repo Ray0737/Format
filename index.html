@@ -229,17 +229,20 @@
         <span class="editor-zoom__level" id="editor-zoom-level">100%</span>
         <button type="button" class="editor-zoom__btn" data-action="zoom-in" title="Zoom in"
           aria-label="Zoom in">+</button>
+        <span class="editor-zoom__sep" aria-hidden="true"></span>
+        <button type="button" class="editor-zoom__btn editor-zoom__btn--home" data-action="zoom-reset"
+          title="Reset zoom to 100%" aria-label="Reset zoom to 100%">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11.5 12 4l9 7.5" />
+            <path d="M5 10v10h14V10" />
+          </svg>
+        </button>
       </div>
     </section>
 
     <!-- Flashcards view (standalone decks, not document-based) -->
     <section id="view-flashcards" class="view hidden">
-      <div class="bg-navy-800 px-6 py-14 text-center text-white sm:py-16">
-        <h1 class="text-display">Flashcards</h1>
-        <p class="mx-auto mt-3 max-w-xl text-base font-light text-navy-100 sm:text-lg">
-          Standalone decks with spaced-repetition review — separate from your documents.
-        </p>
-      </div>
       <div class="mx-auto max-w-6xl px-6 py-12" id="flashcards-stage"></div>
     </section>
 
@@ -259,46 +262,75 @@
   <!-- New document modal -->
   <div id="new-doc-modal" class="modal-overlay hidden" role="dialog" aria-modal="true"
     aria-labelledby="new-doc-heading">
-    <div class="modal">
+    <div class="modal modal--picker">
       <div class="modal__header">
-        <h2 id="new-doc-heading" class="text-card-title text-navy-800">New document</h2>
+        <h2 id="new-doc-heading" class="modal__title">New document</h2>
         <button type="button" class="modal__close" data-action="close-modal" aria-label="Close">&times;</button>
       </div>
       <div class="modal__body">
-        <div class="modal__type-grid" id="new-doc-types"></div>
-        <div>
-          <label class="modal__label" for="new-doc-name">Document name</label>
-          <input type="text" id="new-doc-name" class="modal__input mt-1.5 w-full" placeholder="Untitled"
-            autocomplete="off">
+        <div class="picker-field">
+          <label class="picker-label" for="new-doc-name">Document name</label>
+          <input type="text" id="new-doc-name" class="picker-input" placeholder="Untitled" autocomplete="off">
         </div>
+        <div class="picker-field">
+          <span class="picker-label">Type</span>
+          <div class="picker-row" id="new-doc-types"></div>
+        </div>
+        <p class="picker-note">Documents are stored locally on this device — nothing is uploaded.</p>
       </div>
-      <div class="modal__footer">
-        <button type="button" class="modal__btn modal__btn--secondary" data-action="close-modal">Cancel</button>
-        <button type="button" id="new-doc-create" class="modal__btn modal__btn--primary">Create</button>
+      <div class="modal__footer modal__footer--full">
+        <button type="button" id="new-doc-create" class="picker-cta">Create document</button>
       </div>
     </div>
   </div>
 
   <!-- Export chooser modal -->
   <div id="export-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="export-heading">
-    <div class="modal modal--sm">
+    <div class="modal modal--picker">
       <div class="modal__header">
-        <h2 id="export-heading" class="text-card-title text-navy-800">Export document</h2>
+        <h2 id="export-heading" class="modal__title">Export document</h2>
         <button type="button" class="modal__close" data-action="export-close" aria-label="Close">&times;</button>
       </div>
       <div class="modal__body">
-        <button type="button" class="export-option" data-export="print">
-          <span class="export-option__title">Print / Save as PDF</span>
-          <span class="export-option__desc">Use the browser print dialog (vector text, best quality)</span>
-        </button>
-        <button type="button" class="export-option" data-export="pdf">
-          <span class="export-option__title">Download PDF</span>
-          <span class="export-option__desc">Render each page to an A4 PDF file (includes ink)</span>
-        </button>
-        <button type="button" class="export-option" data-export="png">
-          <span class="export-option__title">Download PNG</span>
-          <span class="export-option__desc">One image per page (includes ink)</span>
-        </button>
+        <div class="picker-field">
+          <span class="picker-label">Format</span>
+          <div class="picker-row" id="export-types">
+            <button type="button" class="picker-card is-selected" data-export="print">
+              <span class="picker-card__check">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="picker-card__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              </span>
+              <span class="picker-card__title">Print / PDF</span>
+              <span class="picker-card__desc">Browser print dialog</span>
+            </button>
+            <button type="button" class="picker-card" data-export="pdf">
+              <span class="picker-card__check">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="picker-card__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+              </span>
+              <span class="picker-card__title">PDF file</span>
+              <span class="picker-card__desc">A4 pages, with ink</span>
+            </button>
+            <button type="button" class="picker-card" data-export="png">
+              <span class="picker-card__check">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="picker-card__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+              </span>
+              <span class="picker-card__title">PNG image</span>
+              <span class="picker-card__desc">One per page, with ink</span>
+            </button>
+          </div>
+        </div>
+        <p class="picker-note">Ink and images are included. PDF and PNG render each page; Print uses your browser's dialog.</p>
+      </div>
+      <div class="modal__footer modal__footer--full">
+        <button type="button" class="picker-cta" data-action="export-run">Export</button>
       </div>
     </div>
   </div>
@@ -349,17 +381,20 @@
   <!-- Confirm dialog (replaces native confirm()) -->
   <div id="confirm-modal" class="modal-overlay hidden" role="alertdialog" aria-modal="true"
     aria-labelledby="confirm-heading">
-    <div class="modal modal--sm">
-      <div class="modal__header">
-        <h2 id="confirm-heading" class="text-card-title text-navy-800">Confirm</h2>
-        <button type="button" class="modal__close" data-action="confirm-cancel" aria-label="Close">&times;</button>
-      </div>
-      <div class="modal__body">
-        <p class="modal__message" id="confirm-message"></p>
-      </div>
-      <div class="modal__footer">
-        <button type="button" class="modal__btn modal__btn--secondary" data-action="confirm-cancel">Cancel</button>
-        <button type="button" class="modal__btn modal__btn--danger" data-action="confirm-ok">Delete</button>
+    <div class="confirm-dialog">
+      <span class="confirm-dialog__icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+      </span>
+      <h2 id="confirm-heading" class="confirm-dialog__title">Delete</h2>
+      <p class="confirm-dialog__message" id="confirm-message"></p>
+      <div class="confirm-dialog__actions">
+        <button type="button" class="confirm-btn confirm-btn--cancel" data-action="confirm-cancel">No, keep it.</button>
+        <button type="button" class="confirm-btn confirm-btn--danger" data-action="confirm-ok">Yes, delete!</button>
       </div>
     </div>
   </div>

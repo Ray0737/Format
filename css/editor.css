@@ -446,24 +446,40 @@
   cursor: grabbing;
 }
 
-/* Image resize handle (bottom-right corner) */
-.doc-element__resize {
-  display: none;
-  position: absolute;
-  right: -7px;
-  bottom: -7px;
-  width: 14px;
-  height: 14px;
-  background: var(--color-amber);
-  border: 2px solid var(--color-white);
-  border-radius: 50%;
-  cursor: nwse-resize;
-  z-index: 1;
+/* Images and shapes drag from anywhere on the body (Canva-style) */
+.doc-element[data-element="image"],
+.doc-element--shape {
+  cursor: move;
 }
 
-.doc-element.is-selected:not(.is-locked) .doc-element__resize {
-  display: block;
+.doc-element.is-locked {
+  cursor: default;
 }
+
+/* 8-way resize handles, added on selection for images/shapes */
+.doc-element__rz {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  background: var(--color-white);
+  border: 1.5px solid var(--color-amber);
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgb(5 18 36 / 0.3);
+  z-index: 3;
+}
+
+.doc-element.is-locked .doc-element__rz {
+  display: none;
+}
+
+.doc-element__rz--nw { top: -6px; left: -6px; cursor: nwse-resize; }
+.doc-element__rz--ne { top: -6px; right: -6px; cursor: nesw-resize; }
+.doc-element__rz--se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+.doc-element__rz--sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+.doc-element__rz--n { top: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.doc-element__rz--s { bottom: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.doc-element__rz--e { right: -6px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+.doc-element__rz--w { left: -6px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
 
 /* Floating shape elements */
 .doc-element--shape svg {
@@ -553,11 +569,11 @@
   z-index: 60;
   align-items: center;
   gap: 2px;
-  padding: 6px 8px;
+  padding: 4px 6px;
   background: #1f2024;
   border: 1px solid rgb(255 255 255 / 0.08);
   border-radius: 999px;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.32);
   transform: translateX(-50%);
 }
 
@@ -567,8 +583,8 @@
 
 .element-panel__sep {
   width: 1px;
-  height: 22px;
-  margin: 0 5px;
+  height: 18px;
+  margin: 0 4px;
   background: rgb(255 255 255 / 0.14);
 }
 
@@ -576,8 +592,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border: none;
   background: none;
   border-radius: 50%;
@@ -597,13 +613,66 @@
 }
 
 .element-panel__btn svg {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
 }
 
 .element-panel__btn--danger:hover {
   background: rgb(192 57 43 / 0.25);
   color: #ff6b5a;
+}
+
+/* "More" dropdown (layer order) */
+.element-panel__more {
+  position: relative;
+  display: flex;
+}
+
+.element-panel__menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 168px;
+  padding: 6px;
+  background: #1f2024;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+  z-index: 1;
+}
+
+.element-panel__menu.is-open {
+  display: block;
+}
+
+.element-panel__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  border-radius: 7px;
+  color: rgb(255 255 255 / 0.85);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.element-panel__menu-item:hover {
+  background: rgb(255 255 255 / 0.1);
+  color: #fff;
+}
+
+.element-panel__menu-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 /* A4 page canvas */
@@ -688,6 +757,18 @@
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-navy-100);
+}
+
+.editor-zoom__sep {
+  width: 1px;
+  height: 18px;
+  margin: 0 2px;
+  background: rgb(255 255 255 / 0.14);
+}
+
+.editor-zoom__btn--home svg {
+  width: 15px;
+  height: 15px;
 }
 
 /* ── Ink overlay (Phase 8) ─────────────────────────────────────────── */
@@ -781,6 +862,43 @@
   height: 18px;
 }
 
+/* Line-weight selector */
+.ink-weight {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 34px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.ink-weight:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ink-weight.is-active {
+  background: rgb(222 121 20 / 0.2);
+}
+
+.ink-weight__dot {
+  display: block;
+  border-radius: 50%;
+  background: var(--color-navy-100);
+}
+
+.ink-weight:hover .ink-weight__dot,
+.ink-weight.is-active .ink-weight__dot {
+  background: var(--color-white);
+}
+
+.ink-weight.is-active .ink-weight__dot {
+  background: var(--color-amber);
+}
+
 .ink-swatch {
   width: 22px;
   height: 22px;
@@ -798,6 +916,46 @@
 .ink-swatch.is-active {
   border-color: var(--color-white);
   box-shadow: 0 0 0 2px var(--color-amber);
+}
+
+/* Custom colour picker — a "+" tile wrapping a hidden <input type=color> */
+.ink-custom {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1px dashed rgb(255 255 255 / 0.3);
+  background: none;
+  color: rgb(255 255 255 / 0.7);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.ink-custom:hover {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-white);
+  border-color: rgb(255 255 255 / 0.5);
+}
+
+.ink-custom svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ink-custom input[type="color"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .ink-done {
