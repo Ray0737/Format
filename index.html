@@ -32,22 +32,13 @@
       <span class="text-base font-semibold tracking-tight">Format</span>
     </div>
 
-    <nav class="hidden h-full items-center gap-1 md:flex">
+    <nav class="topnav__inline h-full items-center gap-1">
       <a href="#home" data-view="home" class="topnav__link is-active">My Documents</a>
       <a href="#flashcards" data-view="flashcards" class="topnav__link">Flashcards</a>
       <a href="#study" data-view="study" class="topnav__link">Study Mode</a>
     </nav>
 
     <div class="flex items-center gap-3">
-      <button type="button"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-md text-navy-100 transition-colors hover:bg-white/10 hover:text-white"
-        aria-label="Search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" class="h-[18px] w-[18px]">
-          <circle cx="11" cy="11" r="7" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-      </button>
       <button type="button" data-action="new-doc"
         class="inline-flex items-center gap-1.5 rounded-md bg-amber px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-hover">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -57,7 +48,25 @@
         </svg>
         New
       </button>
+      <!-- Mobile menu toggle (shown when the inline nav is hidden) -->
+      <button type="button" data-action="nav-menu" id="nav-menu-btn"
+        class="topnav__menu-btn inline-flex h-9 w-9 items-center justify-center rounded-md text-navy-100 transition-colors hover:bg-white/10 hover:text-white"
+        aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
     </div>
+
+    <!-- Mobile dropdown menu -->
+    <nav id="nav-menu" class="nav-menu">
+      <a href="#home" data-view="home" class="nav-menu__link is-active">My Documents</a>
+      <a href="#flashcards" data-view="flashcards" class="nav-menu__link">Flashcards</a>
+      <a href="#study" data-view="study" class="nav-menu__link">Study Mode</a>
+    </nav>
   </header>
 
   <main>

@@ -290,6 +290,8 @@ window.Format = window.Format || {};
     let pinchStartDist = 0;
     let pinchStartZoom = 1;
     canvasEl?.addEventListener("touchstart", (event) => {
+      // In Draw mode, two fingers (often a resting palm + pen) must NOT zoom.
+      if (Format.Ink?.isEnabled?.()) return;
       if (event.touches.length === 2) {
         pinchStartDist = touchDistance(event.touches);
         pinchStartZoom = zoomLevel;
@@ -298,6 +300,7 @@ window.Format = window.Format || {};
     canvasEl?.addEventListener(
       "touchmove",
       (event) => {
+        if (Format.Ink?.isEnabled?.()) return;
         if (event.touches.length === 2 && pinchStartDist > 0) {
           event.preventDefault();
           const ratio = touchDistance(event.touches) / pinchStartDist;

@@ -55,6 +55,7 @@ window.Format = window.Format || {};
   let drawing = false;
   let activePointerId = null;
   let penContact = false; // a pen is currently touching — reject touch (palm)
+  let penSeen = false; // a stylus has been used this session → reject finger/palm touches
   let currentStroke = null;
   let currentCanvas = null;
 
@@ -179,9 +180,14 @@ window.Format = window.Format || {};
     if (!enabled) return;
     const canvas = event.currentTarget;
 
-    if (event.pointerType === "pen") penContact = true;
-    // Palm rejection: ignore touch while a pen is in contact.
-    if (event.pointerType === "touch" && penContact) return;
+    if (event.pointerType === "pen") {
+      penContact = true;
+      penSeen = true;
+    }
+    // Palm rejection: once a stylus has been used, ignore all touch input (so a
+    // resting hand never draws or pans); otherwise (finger-only devices) allow
+    // touch, but still reject touch while a pen is actively in contact.
+    if (event.pointerType === "touch" && (penSeen || penContact)) return;
     if (drawing) return;
 
     event.preventDefault();

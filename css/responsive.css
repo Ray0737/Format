@@ -117,6 +117,26 @@ header {
   .a4-page {
     padding: 32px;
   }
+
+  /* Editor top bar gets crowded in portrait — tighten + drop the inline
+     "Saved" status (auto-save still runs) so the action buttons fit. */
+  .editor-topbar {
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .editor-topbar__center {
+    display: none;
+  }
+
+  .editor-btn {
+    padding: 7px 11px;
+    font-size: 0.78rem;
+  }
+
+  .editor-title-input {
+    max-width: 160px;
+  }
 }
 
 @media (max-width: 640px) {

@@ -1,5 +1,17 @@
 /* Format — top navigation */
 
+/* Inline nav links: shown on wide screens (≥900px), replaced by the hamburger
+   dropdown on portrait tablets / phones. */
+.topnav__inline {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .topnav__inline {
+    display: flex;
+  }
+}
+
 .topnav__link {
   display: flex;
   align-items: center;
@@ -21,4 +33,60 @@
   color: var(--color-white);
   font-weight: 600;
   border-bottom-color: var(--color-amber);
+}
+
+/* ── Mobile dropdown menu (shown when the inline nav is hidden) ──────── */
+.topnav__menu-btn {
+  display: inline-flex;
+}
+
+.nav-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 12px;
+  z-index: 60;
+  min-width: 190px;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: var(--color-navy-800);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.4);
+}
+
+.nav-menu.is-open {
+  display: flex;
+}
+
+.nav-menu__link {
+  display: block;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-navy-100);
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-menu__link:hover {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-white);
+}
+
+.nav-menu__link.is-active {
+  color: var(--color-white);
+  background: rgb(222 121 20 / 0.18);
+}
+
+/* On wide screens the inline nav is used; hide the mobile menu + toggle. */
+@media (min-width: 900px) {
+  .topnav__menu-btn {
+    display: none !important;
+  }
+  .nav-menu {
+    display: none !important;
+  }
 }

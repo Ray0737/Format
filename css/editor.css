@@ -809,10 +809,14 @@
   transform: translateX(-50%);
   z-index: 46;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 4px;
+  row-gap: 6px;
+  max-width: calc(100vw - 16px);
   padding: 6px 10px;
   background: var(--color-navy-800);
-  border-radius: 999px;
+  border-radius: 18px;
   box-shadow: 0 8px 24px rgb(5 18 36 / 0.3);
 }
 

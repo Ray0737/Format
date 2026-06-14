@@ -24,7 +24,7 @@ window.Format = window.Format || {};
       document.getElementById(`view-${view}`)?.classList.toggle("hidden", view !== target);
     }
 
-    for (const link of document.querySelectorAll(".topnav__link[data-view]")) {
+    for (const link of document.querySelectorAll(".topnav__link[data-view], .nav-menu__link[data-view]")) {
       link.classList.toggle("is-active", link.dataset.view === target && !link.dataset.section);
     }
 
@@ -46,12 +46,32 @@ window.Format = window.Format || {};
     }
   }
 
+  function closeNavMenu() {
+    const menu = document.getElementById("nav-menu");
+    menu?.classList.remove("is-open");
+    document.getElementById("nav-menu-btn")?.setAttribute("aria-expanded", "false");
+  }
+
   function initRouting() {
     document.addEventListener("click", (event) => {
+      // Mobile menu toggle
+      const menuBtn = event.target.closest('[data-action="nav-menu"]');
+      if (menuBtn) {
+        const menu = document.getElementById("nav-menu");
+        const open = menu?.classList.toggle("is-open");
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        return;
+      }
+
       const link = event.target.closest("[data-view]");
-      if (!link) return;
+      if (!link) {
+        // Click elsewhere closes the mobile menu.
+        if (!event.target.closest("#nav-menu")) closeNavMenu();
+        return;
+      }
 
       event.preventDefault();
+      closeNavMenu();
 
       if (link.dataset.docId) {
         Format.Editor?.open(link.dataset.docId);
