@@ -1,0 +1,147 @@
+/* Format — base styles, fonts, typography scale */
+
+/* Inter — self-hosted, no CDN */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("../assets/fonts/inter/inter-200.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../assets/fonts/inter/inter-300.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/inter/inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/inter/inter-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/inter/inter-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/inter/inter-700.woff2") format("woff2");
+}
+
+/* Sarabun — self-hosted, Thai-script subset only (Latin/numbers fall back
+   to Inter via unicode-range, which Google Fonts already restricts this
+   subset to). */
+@font-face {
+  font-family: "Sarabun";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/sarabun/sarabun-400.woff2") format("woff2");
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+@font-face {
+  font-family: "Sarabun";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/sarabun/sarabun-600.woff2") format("woff2");
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+@font-face {
+  font-family: "Sarabun";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/sarabun/sarabun-700.woff2") format("woff2");
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+
+/* Typography scale — see README "Design Language > Typography" */
+.text-display {
+  font-weight: 200;
+  font-size: clamp(2.75rem, 6vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.text-heading {
+  font-weight: 300;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.25;
+}
+
+.text-card-title {
+  font-weight: 500;
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+
+.text-label {
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.text-iata {
+  font-weight: 700;
+  font-size: clamp(3.5rem, 8vw, 4.5rem);
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+/* Hero search — underline style, white text on navy */
+.hero-search {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.25);
+  background: transparent;
+  color: var(--color-white);
+  font-size: 1rem;
+  padding: 10px 2px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.hero-search::placeholder {
+  color: rgb(255 255 255 / 0.5);
+}
+
+.hero-search:focus {
+  border-bottom-color: var(--color-amber);
+}
+
+.hero-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+  opacity: 0.6;
+}
+
+.hero-search::-webkit-search-cancel-button:hover {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
+  transform: scale(1.15);
+  opacity: 1;
+}

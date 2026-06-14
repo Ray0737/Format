@@ -1,0 +1,7 @@
+# Build tool binaries (re-downloadable, exceed GitHub size limits)
+tools/tailwindcss.exe
+*.exe
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

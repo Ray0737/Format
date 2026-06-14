@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Source scan: project root, for class detection during build */
+@source "../**/*.{html,js}";
+
+@theme {
+  /* Navy scale */
+  --color-navy-950: #020c1a;
+  --color-navy-900: #030f20;
+  --color-navy-800: #051224;
+  --color-navy-700: #071832;
+  --color-navy-600: #0a2040;
+  --color-navy-100: #dce8f0;
+  --color-navy-50: #f0f5f9;
+
+  /* Amber accent */
+  --color-amber: #de7914;
+  --color-amber-hover: #e89520;
+  --color-amber-light: #f5d28a;
+
+  /* Text + utility colors (text-dark == navy-800, use that token directly) */
+  --color-muted: #5a7080;
+  --color-border: #dde5ea;
+  --color-success: #1a7a4a;
+  --color-danger: #c0392b;
+
+  /* Font */
+  --font-sans: "Inter", "Sarabun", ui-sans-serif, system-ui, sans-serif;
+  --default-font-family: var(--font-sans);
+}

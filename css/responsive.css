@@ -1,0 +1,159 @@
+/* Format — tablet + desktop breakpoints, polish & a11y (Phase 12) */
+
+/* ── Smooth view transition ────────────────────────────────────────── */
+.view:not(.hidden) {
+  animation: view-fade 0.2s ease;
+}
+
+@keyframes view-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Accessibility: visible focus rings ────────────────────────────── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Don't double-ring the contenteditable pages (they manage their own caret) */
+.a4-page:focus-visible {
+  outline: none;
+}
+
+/* ── Safe-area insets (iPad notch / Android status bar) ─────────────── */
+header {
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
+}
+
+.study-home-link {
+  top: max(20px, env(safe-area-inset-top));
+  left: max(20px, env(safe-area-inset-left));
+}
+
+.ink-toolbar,
+.toast {
+  bottom: max(20px, env(safe-area-inset-bottom));
+}
+
+/* ── Keyboard touch handling on the page canvas ────────────────────── */
+.editor-canvas {
+  touch-action: manipulation;
+}
+
+/* ── Keyboard shortcuts overlay list ───────────────────────────────── */
+.shortcuts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 4px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.shortcut-row:last-child {
+  border-bottom: none;
+}
+
+.shortcut-keys {
+  flex-shrink: 0;
+  min-width: 150px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-navy-800);
+}
+
+.shortcut-desc {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+/* ── Home doc-grid loading skeleton ────────────────────────────────── */
+.doc-grid.is-loading {
+  pointer-events: none;
+}
+
+.doc-skeleton {
+  height: 132px;
+  border-radius: 10px;
+  background: linear-gradient(100deg, var(--color-navy-50) 30%, #eef2f6 50%, var(--color-navy-50) 70%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Tablet / portrait layout ──────────────────────────────────────── */
+@media (max-width: 900px) {
+  .editor-toolbar {
+    /* already flex-wraps; tighten on smaller widths */
+    max-width: calc(100vw - 24px);
+  }
+
+  .a4-page {
+    padding: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .editor-topbar {
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .editor-btn {
+    padding: 7px 10px;
+  }
+
+  /* Hide the breadcrumb separator and collapse labels on phones */
+  .editor-topbar__sep {
+    display: none;
+  }
+
+  .editor-canvas {
+    padding: 8px 8px 64px;
+  }
+
+  .a4-page {
+    padding: 24px;
+  }
+
+  .flashcard-stack {
+    height: 220px;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .view:not(.hidden),
+  .doc-skeleton,
+  .flashcard__inner,
+  .toast {
+    animation: none !important;
+    transition: none !important;
+  }
+}
