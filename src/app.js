@@ -101,10 +101,23 @@ window.Format = window.Format || {};
   function initServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     if (location.protocol !== "http:" && location.protocol !== "https:") return;
+
+    // When an updated worker takes control, reload once so the user sees the
+    // new version automatically (skip the very first install, which has no
+    // previous controller — avoids an extra reload on first visit).
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!hadController || reloaded) return;
+      reloaded = true;
+      location.reload();
+    });
+
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch((err) => {
-        console.warn("Service worker registration failed", err);
-      });
+      navigator.serviceWorker
+        .register("sw.js")
+        .then((reg) => reg.update())
+        .catch((err) => console.warn("Service worker registration failed", err));
     });
   }
 

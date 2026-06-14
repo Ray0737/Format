@@ -537,6 +537,7 @@ Files: `src/engine/srs.js` (new) · `src/components/review.js` (new) · `src/eng
 
 | Date | Decision | Notes |
 |---|---|---|
+| 2026-06-13 | Fix "Vercel won't update" (service-worker + CDN caching) | Deploys weren't reaching users because (a) the SW was **cache-first** and `CACHE_VERSION` wasn't bumped, so old assets kept serving, and (b) the CDN could serve a stale `sw.js`. Fixes: bumped `CACHE_VERSION` v4→v5; rewrote the SW fetch strategy to **network-first for the app shell** (HTML/CSS/JS/manifest) with cache fallback, keeping **cache-first only for `lib/` + fonts/icons** (still fully offline); added **`vercel.json`** with `Cache-Control: max-age=0, must-revalidate` on `sw.js`/`index.html`/`/`/`manifest.json` (+ `Service-Worker-Allowed: /`); and `app.js` now **auto-reloads once** on `controllerchange` when an updated worker takes control (skips first install). Net effect: an online reload picks up new deploys automatically while offline use is preserved. Load-tested, zero console errors. |
 | 2026-06-09 | Project initialized | Initial planning session |
 | 2026-06-09 | App name: **Format** | Working title was NoteForge |
 | 2026-06-09 | Framework: **PWA Vanilla JS** | No build tool required |

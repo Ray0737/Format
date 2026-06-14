@@ -2,7 +2,7 @@
 // Cache-first, fully offline. No network calls ever leave the cache layer.
 // Bump CACHE_VERSION whenever any cached file changes to force a refresh.
 
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 const CACHE_NAME = `format-${CACHE_VERSION}`;
 
 const KATEX_FONTS = [
@@ -118,25 +118,51 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Cache-first: serve from cache, fall back to network, then cache the response
-// for next time. This app is designed to never need the network, but this
-// keeps things working if a new asset slips in before the cache is bumped.
+function putInCache(request, response) {
+  caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+}
+
+// Strategy:
+//  • Big, rarely-changing assets (libraries, fonts, icons) → cache-first
+//    (fast, and they're version-stable).
+//  • The app shell (HTML, CSS, JS, manifest) → network-first with a cache
+//    fallback, so a new deploy shows up as soon as the device is online while
+//    still working fully offline.
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const req = event.request;
+  if (req.method !== "GET") return;
 
+  const url = new URL(req.url);
+  const sameOrigin = url.origin === self.location.origin;
+  const cacheFirst =
+    sameOrigin &&
+    (url.pathname.includes("/lib/") ||
+      url.pathname.includes("/assets/fonts/") ||
+      url.pathname.includes("/assets/icons/"));
+
+  if (cacheFirst) {
+    event.respondWith(
+      caches.match(req).then(
+        (cached) =>
+          cached ||
+          fetch(req).then((resp) => {
+            if (resp && resp.status === 200) putInCache(req, resp.clone());
+            return resp;
+          })
+      )
+    );
+    return;
+  }
+
+  // Network-first for everything else (app shell).
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(event.request)
-        .then((response) => {
-          if (!response || response.status !== 200) return response;
-
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          return response;
-        })
-        .catch(() => cached);
-    })
+    fetch(req)
+      .then((resp) => {
+        if (resp && resp.status === 200 && sameOrigin) putInCache(req, resp.clone());
+        return resp;
+      })
+      .catch(() =>
+        caches.match(req).then((cached) => cached || caches.match("./index.html"))
+      )
   );
 });
